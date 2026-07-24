@@ -1,0 +1,100 @@
+import { CharacterCard } from '../types';
+
+export const INITIAL_CARDS: CharacterCard[] = [
+  {
+    id: 'char-5',
+    name: 'Dương Tử Mặc',
+    tag: 'Hiện đại',
+    tagsList: ['Hiện đại', 'Niên hạ', 'BG/BL', 'bái tre', 'R18?', 'Showbiz'],
+    imageUrl: 'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/749300736_122123339385356267_6077207301486485598_n.jpg?stp=dst-jpg_tt6&cstp=mx692x942&ctp=s692x942&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=surDFYQISGsQ7kNvwH-dBzG&_nc_oc=Adq7KD0d0nTyelPiiq8KOWKv_G_x1w1Dja0RQx7X2X66YiJJWluJ24Vxi8qMI_rak6U&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=2SViCRLdTrwWf23VFJ7oeQ&_nc_ss=7b2a8&oh=00_AQD_IwwjWOJFXDDvz5OGE3WmpvI7MhKN7p0vXtycLRRQzQ&oe=6A69287F',
+    imagesList: [
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/749300736_122123339385356267_6077207301486485598_n.jpg?stp=dst-jpg_tt6&cstp=mx692x942&ctp=s692x942&_nc_cat=102&ccb=1-7&_nc_sid=127cfc&_nc_ohc=surDFYQISGsQ7kNvwH-dBzG&_nc_oc=Adq7KD0d0nTyelPiiq8KOWKv_G_x1w1Dja0RQx7X2X66YiJJWluJ24Vxi8qMI_rak6U&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=2SViCRLdTrwWf23VFJ7oeQ&_nc_ss=7b2a8&oh=00_AQD_IwwjWOJFXDDvz5OGE3WmpvI7MhKN7p0vXtycLRRQzQ&oe=6A69287F',
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/750355797_122123339775356267_612909858748490276_n.jpg?stp=dst-jpg_tt6&cstp=mx736x1308&ctp=s736x1308&_nc_cat=109&ccb=1-7&_nc_sid=127cfc&_nc_ohc=2JiqU8PJXVsQ7kNvwHYIQBm&_nc_oc=Adp9VA5eVuKco4eDtzDXxVU-joJaV0LE4brbXLxO2XqMTw67uovbZKyB0uzNiEymQzU&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=V8x5B6ErW4U6AaV6-XJENQ&_nc_ss=7b2a8&oh=00_AQB4zekF_nsT-C--NwXrTJTlX8esl8BUQKlz1wzzKdpmyQ&oe=6A693837'
+    ],
+    chatUrl: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221LlY2W7r-yuyqlNmWOTpSOrljnC4miXk0%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    copyLink: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221LlY2W7r-yuyqlNmWOTpSOrljnC4miXk0%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    description: 'Không ai biết rằng, thế giới của hắn thực ra vô cùng nhỏ bé, nhỏ đến mức vừa vặn ôm trọn bóng hình của một mình em.',
+    author: 'Bột',
+    greeting: 'Không ai biết rằng, thế giới của hắn thực ra vô cùng nhỏ bé, nhỏ đến mức vừa vặn ôm trọn bóng hình của một mình em.',
+    personality: 'Hiện đại, Niên hạ, BG/BL, bái tre, R18?, Showbiz',
+    likesCount: 960,
+    isFavorite: false,
+    createdAt: '2026-07-24'
+  },
+  {
+    id: 'char-4',
+    name: 'Hoắc Cẩn Nghiêm',
+    tag: 'Hiện đại',
+    tagsList: ['Hiện đại', 'Ngụy côn trùng', 'BG/BL', '419', 'Oan gia'],
+    imageUrl: 'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/741906661_122118958269356267_8631235361350723221_n.jpg?stp=dst-jpg_tt6&cstp=mx1200x856&ctp=s1200x856&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iOfhOT9fvEMQ7kNvwEbYmQP&_nc_oc=Adp7OR-GPv98VuJCJUK00jsnzkohve0wIS_rFNWQGpg6PSVKPu83wa1-Z27bijj8nIU&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=Xzz_MMEJ9BdQd-51qSyljw&_nc_ss=7b2a8&oh=00_AQBpQL3aP441D027A8TsEn8Ct09vRyuRePs28CvLiWVT7w&oe=6A693137',
+    imagesList: [
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/741906661_122118958269356267_8631235361350723221_n.jpg?stp=dst-jpg_tt6&cstp=mx1200x856&ctp=s1200x856&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=iOfhOT9fvEMQ7kNvwEbYmQP&_nc_oc=Adp7OR-GPv98VuJCJUK00jsnzkohve0wIS_rFNWQGpg6PSVKPu83wa1-Z27bijj8nIU&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=Xzz_MMEJ9BdQd-51qSyljw&_nc_ss=7b2a8&oh=00_AQBpQL3aP441D027A8TsEn8Ct09vRyuRePs28CvLiWVT7w&oe=6A693137',
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/741757136_122118958485356267_5143466394196369180_n.jpg?stp=dst-jpg_tt6&cstp=mx1152x1074&ctp=s1152x1074&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=4EC1QofGoN0Q7kNvwGvT5eS&_nc_oc=AdrvEdnwoiTfGxsNcDysawZrMuZJsyTlXyekWFqqa_NT0Blxwpp-Nduaalb24r_O1KI&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=vhZxZk_XYNObxj3-QQOgxw&_nc_ss=7b2a8&oh=00_AQAZOQYFWfx5Q5gIxOjsPJo9EfGe83fUrtfosWqwJYI9gQ&oe=6A693D9D'
+    ],
+    chatUrl: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221L42QwL6ty7iQeh0_jXMikpHwbdkuQQzt%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    copyLink: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221L42QwL6ty7iQeh0_jXMikpHwbdkuQQzt%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    description: 'Bé ngoan , đừng chạy.',
+    author: 'Bột',
+    greeting: 'Bé ngoan , đừng chạy.',
+    personality: 'Hiện đại, Ngụy côn trùng, BG/BL, 419, Oan gia',
+    likesCount: 950,
+    isFavorite: false,
+    createdAt: '2026-07-24'
+  },
+  {
+    id: 'char-3',
+    name: 'Trần Tử Ngôn',
+    tag: 'Hiện đại',
+    tagsList: ['Hiện đại', 'BL/BG', 'Trọng sinh', 'TXVT', 'SE'],
+    imageUrl: 'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/738970371_122117344113356267_8842277856677890549_n.jpg?stp=dst-jpg_tt6&cstp=mx736x736&ctp=s736x736&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=TvsxTjVZKXcQ7kNvwEEX1IG&_nc_oc=AdrXtzcE0j_9BSlJ4ijG2mZ4O_L0EwbfPeEIVPV2GflBYJK0eGJ5SsWit5NdWaLaHTc&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=BPBW4H88W1PN7yQuOpVT6g&_nc_ss=7b2a8&oh=00_AQCY9tfIBWQBAdZphsG7ghD7VSM8hsTB7z8Un1Js4pOiTQ&oe=6A693332',
+    imagesList: [
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/738970371_122117344113356267_8842277856677890549_n.jpg?stp=dst-jpg_tt6&cstp=mx736x736&ctp=s736x736&_nc_cat=105&ccb=1-7&_nc_sid=127cfc&_nc_ohc=TvsxTjVZKXcQ7kNvwEEX1IG&_nc_oc=AdrXtzcE0j_9BSlJ4ijG2mZ4O_L0EwbfPeEIVPV2GflBYJK0eGJ5SsWit5NdWaLaHTc&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=BPBW4H88W1PN7yQuOpVT6g&_nc_ss=7b2a8&oh=00_AQCY9tfIBWQBAdZphsG7ghD7VSM8hsTB7z8Un1Js4pOiTQ&oe=6A693332',
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/740128639_122118955371356267_892866533134731488_n.jpg?stp=dst-jpg_tt6&cstp=mx735x1141&ctp=s735x1141&_nc_cat=104&ccb=1-7&_nc_sid=127cfc&_nc_ohc=t40_XVWWzeUQ7kNvwHiYjYC&_nc_oc=AdoDlkRg0nKl1ocLGMiyvCSNxNRlp5PsOdlfGMDzik95T5w6UEYZ3FnhHVgGIYoVqMg&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=dNgkMo65Bh4utCRynqYc5Q&_nc_ss=7b2a8&oh=00_AQB0ArhGuR33pTjcSSh7wZzIbSi4QauG3llCt_PE68R_tQ&oe=6A690F74'
+    ],
+    chatUrl: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221aUJN3pMzsVqkWgTg-GmjO0fJ-3Fg6h0D%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    copyLink: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221aUJN3pMzsVqkWgTg-GmjO0fJ-3Fg6h0D%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    description: 'Cảm ơn cậu đã xuất hiện trong những năm tháng rực rỡ nhất của cuộc đời tớ, Tử Ngôn à.',
+    author: 'Bột',
+    greeting: 'Cảm ơn cậu đã xuất hiện trong những năm tháng rực rỡ nhất của cuộc đời tớ, Tử Ngôn à.',
+    personality: 'Hiện đại, BL/BG, Trọng sinh, TXVT, SE',
+    likesCount: 920,
+    isFavorite: false,
+    createdAt: '2026-07-24'
+  },
+  {
+    id: 'char-2',
+    name: 'Bạc Kỷ Minh',
+    tag: 'Hiện đại',
+    tagsList: ['Hiện đại', 'BL/BG', 'Hệ thống', 'Ngụy côn trùng', 'R18'],
+    imageUrl: 'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/739140480_122117154705356267_5499029543868346363_n.jpg?stp=dst-jpg_tt6&cstp=mx506x590&ctp=s506x590&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=OuO-sI6WkUUQ7kNvwFD2FQI&_nc_oc=AdqIgYY091ErAsHq7oMnUDOjA5HgIotTuuS8AQ6G64ZWsBGl1HLJCITXdTktxFAxjF4&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=SLxeglyuCJ8NZGwSMle3qg&_nc_ss=7b2a8&oh=00_AQBDrWhqdhxak8XkgG_UjtKZBWE0in2z-kjcibwuydqdCQ&oe=6A6918D9',
+    imagesList: [
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/739140480_122117154705356267_5499029543868346363_n.jpg?stp=dst-jpg_tt6&cstp=mx506x590&ctp=s506x590&_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=OuO-sI6WkUUQ7kNvwFD2FQI&_nc_oc=AdqIgYY091ErAsHq7oMnUDOjA5HgIotTuuS8AQ6G64ZWsBGl1HLJCITXdTktxFAxjF4&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=SLxeglyuCJ8NZGwSMle3qg&_nc_ss=7b2a8&oh=00_AQBDrWhqdhxak8XkgG_UjtKZBWE0in2z-kjcibwuydqdCQ&oe=6A6918D9',
+      'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/738954251_122117154843356267_2530619437892061792_n.jpg?stp=dst-jpg_tt6&cstp=mx443x590&ctp=s443x590&_nc_cat=106&ccb=1-7&_nc_sid=127cfc&_nc_ohc=IFk1lxIGdaMQ7kNvwGrL_6g&_nc_oc=Adr6gDsVFpUz2xJWe4ujDtHe5v9LwosDpR4sADrnzbvy_MHTR_-ik9qhHpn8n73QDvk&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=_6NsEUh1RRD3hWr1x6o2iQ&_nc_ss=7b2a8&oh=00_AQCDrdC_ZmPAiEa_qaf_YUl2Lp83qaqUZGvu3vFqGQeEQw&oe=6A691DD7'
+    ],
+    chatUrl: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221drXPvcyaGR-fuEtfGTW17XgYqohNF0PB%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    copyLink: 'https://aistudio.google.com/app/prompts?state=%7B%22ids%22:%5B%221drXPvcyaGR-fuEtfGTW17XgYqohNF0PB%22%5D,%22action%22:%22open%22,%22userId%22:%22104291666004460469222%22,%22resourceKeys%22:%7B%7D%7D&usp=sharing',
+    description: 'Ngoan ngoãn ở trong tầm mắt của tôi, hoặc chấp nhận bị xích lại. Em chỉ có hai lựa chọn.',
+    author: 'Bột',
+    greeting: 'Ngoan ngoãn ở trong tầm mắt của tôi, hoặc chấp nhận bị xích lại. Em chỉ có hai lựa chọn.',
+    personality: 'Hiện đại, BL/BG, Hệ thống, Ngụy côn trùng, R18',
+    likesCount: 888,
+    isFavorite: false,
+    createdAt: '2026-07-24'
+  },
+  {
+    id: 'char-1',
+    name: 'Ứng Vô Nguyệt',
+    tag: 'Cổ trang',
+    tagsList: ['Cổ trang', 'Huyền huyễn', 'Ngược', 'BG'],
+    imageUrl: 'https://scontent.fhph4-1.fna.fbcdn.net/v/t39.30808-6/738927178_122116941867356267_123950568468688218_n.jpg?stp=dst-jpg_tt6&cstp=mx444x590&ctp=s444x590&_nc_cat=103&ccb=1-7&_nc_sid=127cfc&_nc_ohc=hPMIr1Pn_7UQ7kNvwHP7TxT&_nc_oc=AdqSClmzDD70PWPZ3QHi9AQlzASc70sPEv_nwBridW3546nIW3Xrzz_3cOHgNR-Y2go&_nc_zt=23&_nc_ht=scontent.fhph4-1.fna&_nc_gid=mZvppb3ELwoST5xoq2yR5g&_nc_ss=7b2a8&oh=00_AQAmjDqHNuE9f_kMnvKgT_sJDMr0S0NNeTnoBbFrwTKyXA&oe=6A691A6E',
+    chatUrl: 'https://aistudio.google.com/app/prompts?state=%7B"ids":%5B"1DUooj7HqJFDML47R6Gn8-6D4_8FrHliw"%5D,"action":"open","userId":"104291666004460469222","resourceKeys":%7B%7D%7D&usp=sharing',
+    copyLink: 'https://aistudio.google.com/app/prompts?state=%7B"ids":%5B"1DUooj7HqJFDML47R6Gn8-6D4_8FrHliw"%5D,"action":"open","userId":"104291666004460469222","resourceKeys":%7B%7D%7D&usp=sharing',
+    description: 'Hắn giữ khoảng cách 3 bước, nàng bước tới 4 bước.',
+    author: 'Bột',
+    greeting: 'Hắn giữ khoảng cách 3 bước, nàng bước tới 4 bước.',
+    personality: 'Cổ trang, Huyền huyễn, Ngược, BG',
+    likesCount: 999,
+    isFavorite: false,
+    createdAt: '2026-07-24'
+  }
+];
