@@ -1,0 +1,155 @@
+import React from 'react';
+import { Link2, MessageCircle, Heart, Info } from 'lucide-react';
+import { CharacterCard } from '../types';
+
+interface ItemCardProps {
+  card: CharacterCard;
+  onCopyLink: (link: string) => void;
+  onToggleFavorite: (id: string) => void;
+  onOpenDetail: (card: CharacterCard) => void;
+  onOpenChatSimulator?: (card: CharacterCard) => void;
+}
+
+export const ItemCard: React.FC<ItemCardProps> = ({
+  card,
+  onCopyLink,
+  onToggleFavorite,
+  onOpenDetail,
+}) => {
+  const images = (card.imagesList && card.imagesList.length > 0) ? card.imagesList : [card.imageUrl];
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0);
+
+  React.useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [images.length]);
+
+  // Determine badge styling based on tag
+  const getBadgeClass = (tag: string) => {
+    switch (tag) {
+      case 'Hiện đại':
+        return 'bg-white/90 text-[#A3B18A] border-[#A3B18A]/30';
+      case 'TXVT':
+        return 'bg-white/90 text-[#0277BD] border-[#0277BD]/30';
+      case 'Cổ trang':
+        return 'bg-white/90 text-[#D4A373] border-[#D4A373]/30';
+      case 'Huyền huyễn':
+        return 'bg-white/90 text-[#7B1FA2] border-[#7B1FA2]/30';
+      default:
+        return 'bg-white/90 text-[#D4A373] border-[#D4A373]/30';
+    }
+  };
+
+  const handleCopy = () => {
+    const linkToCopy = card.copyLink || card.chatUrl || window.location.href;
+    onCopyLink(linkToCopy);
+  };
+
+  return (
+    <div className="item-card bg-white/95 backdrop-blur-sm rounded-2xl overflow-hidden border border-[#D4A373]/40 animate-char-card-glow transition-all duration-300 flex flex-col group max-w-sm mx-auto w-full">
+      {/* Image Holder - Compact Height */}
+      <div className="item-image-holder w-full h-[220px] sm:h-[240px] overflow-hidden relative bg-[#FFF9D0]">
+        <img
+          key={currentImageIndex}
+          src={images[currentImageIndex] || card.imageUrl}
+          alt={card.name}
+          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700 animate-in fade-in"
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=800';
+          }}
+        />
+
+        {/* Carousel Indicators if multiple images */}
+        {images.length > 1 && (
+          <div className="absolute top-2.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1 bg-black/40 px-2 py-0.5 rounded-full backdrop-blur-xs">
+            {images.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setCurrentImageIndex(idx);
+                }}
+                className={`w-1.5 h-1.5 rounded-full transition-all cursor-pointer ${
+                  idx === currentImageIndex ? 'bg-amber-300 w-3' : 'bg-white/60 hover:bg-white'
+                }`}
+                title={`Ảnh ${idx + 1}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {/* Category Tag Badge (Bo góc) */}
+        <span className={`item-badge absolute top-2.5 left-2.5 px-3 py-0.5 text-[10px] font-bold tracking-widest uppercase border rounded-full shadow-md backdrop-blur-md ${getBadgeClass(card.tag)}`}>
+          {card.tag}
+        </span>
+
+        {/* Gradient Overlay for Info */}
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/45 to-transparent p-3 text-white flex flex-col justify-end">
+          <div className="flex items-end justify-between">
+            <div>
+              <h3 className="font-serif text-xl sm:text-2xl font-semibold tracking-normal text-white drop-shadow-xs flex items-center gap-2">
+                {card.name}
+              </h3>
+              {card.author && (
+                <p className="text-[11px] text-[#E6C280] font-medium mt-0.5 tracking-wide">
+                  Tác giả: {card.author}
+                </p>
+              )}
+
+              {/* Mục thẻ / Character Tags */}
+              <div className="flex flex-wrap gap-1 mt-1.5">
+                {(card.tagsList || (card.personality ? card.personality.split(',').map(s => s.trim()) : [card.tag])).map((t, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-0.5 text-[10px] font-bold tracking-wider bg-black/40 text-amber-200 rounded-md backdrop-blur-xs border border-amber-300/40 shadow-2xs"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => onOpenDetail(card)}
+              className="p-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white transition-colors cursor-pointer"
+              title="Xem chi tiết"
+            >
+              <Info className="w-3.5 h-3.5" />
+            </button>
+          </div>
+
+          {card.description && (
+            <p className="text-[11px] text-gray-200 line-clamp-2 mt-1 font-normal leading-relaxed">
+              {card.description}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Geometric Action Buttons */}
+      <div className="item-actions flex border-t border-[#D4A373]/20 bg-[#FFFDF0]">
+        <button
+          onClick={handleCopy}
+          className="action-btn btn-copy flex-1 py-2.5 px-2 text-center border-r border-[#D4A373]/20 bg-[#FFFDF0] hover:bg-[#D4A373]/10 text-[#D4A373] text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+        >
+          <Link2 className="w-3.5 h-3.5 text-[#D4A373]" />
+          <span>Copy link</span>
+        </button>
+
+        <a
+          href={card.chatUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="action-btn flex-1 py-2.5 px-2 text-center bg-[#D4A373] hover:bg-[#b08256] text-white text-[11px] font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+          title="Mở liên kết web chat gốc"
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+          <span>Mở Chat</span>
+        </a>
+      </div>
+    </div>
+  );
+};
