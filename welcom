@@ -1,0 +1,112 @@
+import React from 'react';
+import { Sparkles, Heart } from 'lucide-react';
+
+interface WelcomePageProps {
+  onEnter: () => void;
+}
+
+const FacebookIcon = ({ className = "w-4 h-4" }: { className?: string }) => (
+  <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+  </svg>
+);
+
+export const WelcomePage: React.FC<WelcomePageProps> = ({ onEnter }) => {
+  return (
+    <div 
+      id="welcome-page" 
+      className="fixed inset-0 w-full h-screen z-[9999] flex flex-col justify-center items-center px-4 transition-all duration-500 ease-in-out overflow-hidden"
+    >
+      {/* Background Image */}
+      <img
+        src="https://i.pinimg.com/control1/736x/8e/c0/b5/8ec0b537f5ee6342413ebda7f3c06a20.jpg"
+        alt="Background"
+        className="absolute inset-0 w-full h-full object-cover object-center scale-105"
+        onError={(e) => {
+          // Fallback if image load fails
+          (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=1600';
+        }}
+      />
+
+      {/* 50% Dark Overlay for optimal text readability & contrast */}
+      <div className="absolute inset-0 bg-black/50 backdrop-brightness-90" />
+
+      {/* Main Foreground Card for Bánh Bột Lọc */}
+      <div className="relative z-10 mt-20 sm:mt-24 flex flex-col items-center text-center max-w-md mx-auto p-8 sm:p-10 rounded-3xl bg-white/92 border-2 border-[#D4A373] animate-float-glow backdrop-blur-md">
+        {/* Hanging Wooden Sign ("Bảng hiệu gỗ lủng lẳng") - Positioned above card */}
+        <div className="absolute -top-16 sm:-top-20 left-1/2 -translate-x-1/2 z-20 flex flex-col items-center animate-wooden-sign pointer-events-none">
+          {/* Hanging Chains / Ropes */}
+          <div className="flex justify-between w-20 px-1">
+            <div className="w-1 h-6 bg-gradient-to-b from-[#A0522D] via-[#5C2E0B] to-[#3D1C05] shadow-md relative">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-300 border border-amber-700 absolute -bottom-1 -left-0.25 shadow-xs" />
+            </div>
+            <div className="w-1 h-6 bg-gradient-to-b from-[#A0522D] via-[#5C2E0B] to-[#3D1C05] shadow-md relative">
+              <div className="w-1.5 h-1.5 rounded-full bg-amber-300 border border-amber-700 absolute -bottom-1 -left-0.25 shadow-xs" />
+            </div>
+          </div>
+
+          {/* Wooden Plaque */}
+          <div className="bg-gradient-to-b from-[#8B4513] via-[#6e350c] to-[#421d04] border-2 border-[#D4A373] rounded-xl px-5 py-1.5 shadow-2xl flex items-center justify-center relative group">
+            {/* Decorative Corner Screws */}
+            <div className="absolute top-1 left-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 border border-amber-800" />
+            <div className="absolute top-1 right-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 border border-amber-800" />
+            <div className="absolute bottom-1 left-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 border border-amber-800" />
+            <div className="absolute bottom-1 right-1.5 w-1.5 h-1.5 rounded-full bg-amber-400 border border-amber-800" />
+
+            {/* Inner Inset Border */}
+            <div className="border border-[#D4A373]/60 px-3 py-0.5 rounded-lg bg-black/20 flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399] animate-pulse" />
+              <span className="font-serif text-sm sm:text-base font-bold tracking-[0.25em] text-[#FFF9D0] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
+                Open
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Geometric Diamond Emblem */}
+        <div className="mb-6 w-20 h-20 border-2 border-[#D4A373]/60 rotate-45 flex items-center justify-center bg-[#FFFDF0] shadow-md">
+          <div className="w-14 h-14 border border-[#D4A373]/40 -rotate-12 flex items-center justify-center bg-white">
+            <div className="w-8 h-8 bg-[#D4A373]/20 flex items-center justify-center">
+              <Sparkles className="w-5 h-5 text-[#D4A373] rotate-12" />
+            </div>
+          </div>
+        </div>
+
+        {/* Prominent High-Contrast Title */}
+        <h1 className="welcome-title font-serif text-4xl sm:text-5xl font-bold text-[#B37840] mb-1.5 tracking-tight drop-shadow-sm">
+          Bánh Bột Lọc
+        </h1>
+        
+        <div className="welcome-subtitle text-[11px] font-bold text-[#6B8E23] tracking-[0.35em] uppercase mb-4 flex items-center justify-center gap-2">
+          <span>CHARACTER BOUTIQUE</span>
+        </div>
+
+        <a
+          href="https://www.facebook.com/profile.php?id=61590688029529"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-[#1877F2]/10 hover:bg-[#1877F2] text-[#1877F2] hover:text-white border border-[#1877F2]/30 text-xs font-bold transition-all hover:scale-105 active:scale-95 shadow-xs"
+        >
+          <FacebookIcon className="w-4 h-4" />
+          <span>Fanpage</span>
+        </a>
+
+        <p className="text-gray-700 text-xs sm:text-sm mb-8 max-w-xs font-medium leading-relaxed">
+          Góc nhỏ của bột
+        </p>
+
+        <button 
+          onClick={onEnter}
+          className="enter-btn animate-pulse-soft bg-[#D4A373] hover:bg-[#b08256] text-white border-2 border-[#D4A373] px-10 py-3.5 text-sm font-bold uppercase tracking-wider rounded-full cursor-pointer transition-all duration-300 hover:scale-105 active:scale-95 shadow-md flex items-center gap-2"
+        >
+          <Heart className="w-4 h-4 fill-current" />
+          Vào quán
+        </button>
+      </div>
+
+      <div className="relative z-10 mt-6 text-[11px] text-amber-100/90 font-semibold tracking-[0.25em] uppercase drop-shadow-md">
+        © 2026 Bánh Bột Lọc • Các user
+      </div>
+    </div>
+  );
+};
