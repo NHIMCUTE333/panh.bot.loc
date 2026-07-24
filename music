@@ -1,0 +1,595 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { 
+  Music, 
+  Play, 
+  Pause, 
+  SkipForward, 
+  SkipBack, 
+  Shuffle, 
+  ChevronDown, 
+  ChevronUp, 
+  Volume2, 
+  VolumeX,
+  Radio,
+  ExternalLink
+} from 'lucide-react';
+
+export interface Song {
+  id: number;
+  title: string;
+  youtubeId: string;
+  startSeconds: number;
+  endSeconds: number;
+  timeRangeLabel: string;
+  youtubeUrl: string;
+}
+
+export const SONGS: Song[] = [
+  {
+    id: 1,
+    title: 'Vịnh Xuân - Thất Đóa Tổ Hợp (咏春 - 七朵组合)',
+    youtubeId: 'uXz9oq7gAeE',
+    startSeconds: 3,
+    endSeconds: 69,
+    timeRangeLabel: '0:03 - 1:09',
+    youtubeUrl: 'https://youtu.be/uXz9oq7gAeE?si=5vMa5KfCpo6mJNRI'
+  },
+  {
+    id: 2,
+    title: 'Đảo không người (無人之島)',
+    youtubeId: 'Q5cuZL30iao',
+    startSeconds: 50,
+    endSeconds: 126,
+    timeRangeLabel: '0:50 - 2:06',
+    youtubeUrl: 'https://youtu.be/Q5cuZL30iao?si=rkfhSNS4mXyIp9HS'
+  },
+  {
+    id: 3,
+    title: 'Hồng Trần Khách Trạm (紅塵客棧)',
+    youtubeId: 'L6joGUdc6y4',
+    startSeconds: 68,
+    endSeconds: 110,
+    timeRangeLabel: '1:08 - 1:50',
+    youtubeUrl: 'https://youtu.be/L6joGUdc6y4?si=-lpm_6NiJ07jeE3n'
+  },
+  {
+    id: 4,
+    title: 'Tứ Mộng _OST VCV (OST 云之羽)',
+    youtubeId: 'Rg6mOoDeWZ4',
+    startSeconds: 68,
+    endSeconds: 132,
+    timeRangeLabel: '1:08 - 2:12',
+    youtubeUrl: 'https://youtu.be/Rg6mOoDeWZ4?si=ugGkj6R4nMG9KeAK'
+  },
+  {
+    id: 5,
+    title: 'Phương Hoa Ngâm - OST Quốc Sắc Phương Hoa (OST 国色芳华)',
+    youtubeId: 'CmiOhIfqwsk',
+    startSeconds: 231,
+    endSeconds: 307,
+    timeRangeLabel: '3:51 - 5:07',
+    youtubeUrl: 'https://youtu.be/CmiOhIfqwsk?si=fqs13bkgrg5WnUW1'
+  },
+  {
+    id: 6,
+    title: 'Sơ kiến - 初见 (Đông cung OST)',
+    youtubeId: 'i4YI3V3NNVU',
+    startSeconds: 159,
+    endSeconds: 224,
+    timeRangeLabel: '2:39 - 3:44',
+    youtubeUrl: 'https://youtu.be/i4YI3V3NNVU?si=4JMYx_meSbCCycMI'
+  },
+  {
+    id: 7,
+    title: 'Như Sương - OST Quốc Sắc Phương Hoa (OST 国色芳华)',
+    youtubeId: 'CmiOhIfqwsk',
+    startSeconds: 424,
+    endSeconds: 458,
+    timeRangeLabel: '7:04 - 7:38',
+    youtubeUrl: 'https://youtu.be/CmiOhIfqwsk?si=RNIefUOnv9Nce6x4'
+  }
+];
+
+declare global {
+  interface Window {
+    YT: any;
+    onYouTubeIframeAPIReady: () => void;
+  }
+}
+
+interface MusicPlayerProps {
+  isWelcomePage?: boolean;
+}
+
+export const MusicPlayer: React.FC<MusicPlayerProps> = ({ isWelcomePage = false }) => {
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isShuffle, setIsShuffle] = useState<boolean>(false);
+  const [volume, setVolume] = useState<number>(isWelcomePage ? 30 : 80);
+  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isPlayerReady, setIsPlayerReady] = useState<boolean>(false);
+
+  const playerRef = useRef<any>(null);
+  const isTransitioningRef = useRef<boolean>(false);
+  const volumeRef = useRef<number>(isWelcomePage ? 30 : 80);
+  const isShuffleRef = useRef<boolean>(false);
+  const currentIndexRef = useRef<number>(0);
+
+  volumeRef.current = volume;
+  isShuffleRef.current = isShuffle;
+  currentIndexRef.current = currentIndex;
+
+  const currentSong = SONGS[currentIndex];
+
+  // Adjust volume based on whether we are on WelcomePage (volume 30) or Homepage (volume 80)
+  useEffect(() => {
+    const targetVol = isWelcomePage ? 30 : 80;
+    setVolume(targetVol);
+    volumeRef.current = targetVol;
+    if (playerRef.current && typeof playerRef.current.setVolume === 'function') {
+      try {
+        playerRef.current.setVolume(targetVol);
+      } catch (e) {
+        console.error(e);
+      }
+    }
+  }, [isWelcomePage]);
+
+  // Load YouTube IFrame API script
+  useEffect(() => {
+    if (!window.YT) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag?.parentNode?.insertBefore(tag, firstScriptTag);
+
+      window.onYouTubeIframeAPIReady = () => {
+        initPlayer();
+      };
+    } else if (window.YT && window.YT.Player) {
+      initPlayer();
+    }
+
+    function initPlayer() {
+      if (playerRef.current) return;
+      playerRef.current = new window.YT.Player('youtube-audio-element', {
+        height: '0',
+        width: '0',
+        videoId: SONGS[0].youtubeId,
+        playerVars: {
+          autoplay: 1,
+          controls: 0,
+          start: SONGS[0].startSeconds,
+          end: SONGS[0].endSeconds,
+          playsinline: 1,
+          rel: 0,
+        },
+        events: {
+          onReady: (event: any) => {
+            setIsPlayerReady(true);
+            event.target.setVolume(volumeRef.current);
+            // Attempt immediate playback on load
+            try {
+              event.target.playVideo();
+              setIsPlaying(true);
+            } catch (e) {
+              console.log('Autoplay attempt:', e);
+            }
+          },
+          onStateChange: (event: any) => {
+            // YT.PlayerState.ENDED = 0
+            if (event.data === 0) {
+              handleNextWithFade();
+            } else if (event.data === 1) {
+              setIsPlaying(true);
+            } else if (event.data === 2) {
+              setIsPlaying(false);
+            }
+          }
+        }
+      });
+    }
+  }, []);
+
+  // Listen for initial user gesture to resume audio if browser blocked initial autoplay
+  useEffect(() => {
+    const handleFirstGesture = () => {
+      const player = playerRef.current;
+      if (player && typeof player.getPlayerState === 'function') {
+        const state = player.getPlayerState();
+        // If not playing (state !== 1)
+        if (state !== 1) {
+          try {
+            player.playVideo();
+            setIsPlaying(true);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+      }
+    };
+
+    window.addEventListener('click', handleFirstGesture, { once: true });
+    window.addEventListener('touchstart', handleFirstGesture, { once: true });
+
+    return () => {
+      window.removeEventListener('click', handleFirstGesture);
+      window.removeEventListener('touchstart', handleFirstGesture);
+    };
+  }, []);
+
+  // Monitor playback time to enforce endSeconds loop/next
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    const interval = setInterval(() => {
+      if (playerRef.current && typeof playerRef.current.getCurrentTime === 'function') {
+        try {
+          const time = playerRef.current.getCurrentTime();
+          const song = SONGS[currentIndexRef.current];
+          if (time >= song.endSeconds - 0.5) {
+            handleNextWithFade();
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      }
+    }, 500);
+
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+
+  // Smooth Fade out -> Switch song -> Fade in
+  const transitionToSong = (targetIndex: number) => {
+    if (isTransitioningRef.current) return;
+    isTransitioningRef.current = true;
+
+    const player = playerRef.current;
+    if (!player || typeof player.setVolume !== 'function') {
+      setCurrentIndex(targetIndex);
+      isTransitioningRef.current = false;
+      return;
+    }
+
+    const startVol = isMuted ? 0 : volumeRef.current;
+    let currentVol = startVol;
+
+    // Step 1: Volume fade out over 500ms
+    const fadeOutTimer = setInterval(() => {
+      currentVol -= 20;
+      if (currentVol <= 0) {
+        currentVol = 0;
+        clearInterval(fadeOutTimer);
+        try {
+          player.setVolume(0);
+        } catch (e) {}
+
+        // Step 2: Switch song
+        setCurrentIndex(targetIndex);
+        const nextSong = SONGS[targetIndex];
+
+        if (typeof player.loadVideoById === 'function') {
+          player.loadVideoById({
+            videoId: nextSong.youtubeId,
+            startSeconds: nextSong.startSeconds,
+            endSeconds: nextSong.endSeconds,
+          });
+          player.playVideo();
+          setIsPlaying(true);
+
+          // Step 3: Volume fade in
+          let inVol = 0;
+          const targetVol = isMuted ? 0 : volumeRef.current;
+          const fadeInTimer = setInterval(() => {
+            inVol += 20;
+            if (inVol >= targetVol) {
+              inVol = targetVol;
+              clearInterval(fadeInTimer);
+              isTransitioningRef.current = false;
+            }
+            try {
+              player.setVolume(inVol);
+            } catch (e) {}
+          }, 80);
+        } else {
+          isTransitioningRef.current = false;
+        }
+      } else {
+        try {
+          player.setVolume(currentVol);
+        } catch (e) {}
+      }
+    }, 80);
+  };
+
+  const getNextIndex = () => {
+    if (isShuffleRef.current) {
+      let rand = Math.floor(Math.random() * SONGS.length);
+      if (rand === currentIndexRef.current && SONGS.length > 1) {
+        rand = (rand + 1) % SONGS.length;
+      }
+      return rand;
+    }
+    return (currentIndexRef.current + 1) % SONGS.length;
+  };
+
+  const getPrevIndex = () => {
+    if (isShuffleRef.current) {
+      let rand = Math.floor(Math.random() * SONGS.length);
+      if (rand === currentIndexRef.current && SONGS.length > 1) {
+        rand = (rand + 1) % SONGS.length;
+      }
+      return rand;
+    }
+    return (currentIndexRef.current - 1 + SONGS.length) % SONGS.length;
+  };
+
+  const handleNextWithFade = () => {
+    const nextIdx = getNextIndex();
+    transitionToSong(nextIdx);
+  };
+
+  const handlePrevWithFade = () => {
+    const prevIdx = getPrevIndex();
+    transitionToSong(prevIdx);
+  };
+
+  const togglePlayPause = () => {
+    const player = playerRef.current;
+    if (!player) return;
+
+    try {
+      if (isPlaying) {
+        player.pauseVideo();
+        setIsPlaying(false);
+      } else {
+        player.playVideo();
+        setIsPlaying(true);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newVol = parseInt(e.target.value, 10);
+    setVolume(newVol);
+    if (isMuted && newVol > 0) {
+      setIsMuted(false);
+    }
+    if (playerRef.current && typeof playerRef.current.setVolume === 'function') {
+      playerRef.current.setVolume(newVol);
+    }
+  };
+
+  const toggleMute = () => {
+    const nextMute = !isMuted;
+    setIsMuted(nextMute);
+    if (playerRef.current && typeof playerRef.current.setVolume === 'function') {
+      playerRef.current.setVolume(nextMute ? 0 : volume);
+    }
+  };
+
+  return (
+    <div className="w-full max-w-5xl mx-auto px-3 sm:px-4 pt-2 pb-1">
+      {/* Hidden YouTube iframe container */}
+      <div className="hidden" aria-hidden="true">
+        <div id="youtube-audio-element" />
+      </div>
+
+      <div className="bg-[#FFFDF0]/95 backdrop-blur-md border border-[#D4A373]/30 rounded-2xl shadow-sm transition-all duration-300 overflow-hidden">
+        {/* Collapsed Top Header Bar */}
+        <div className="px-3 py-2 sm:px-4 sm:py-2.5 flex items-center justify-between gap-2 select-none">
+          <div className="flex items-center gap-2.5 min-w-0 flex-1">
+            <div className={`p-2 rounded-full ${isPlaying ? 'bg-[#D4A373] text-white animate-spin' : 'bg-[#E9D8A6]/40 text-[#B37840]'}`} style={{ animationDuration: '4s' }}>
+              <Music className="w-4 h-4" />
+            </div>
+
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#B37840] bg-[#FAEDCD] px-2 py-0.5 rounded-full flex-shrink-0">
+                  Bài {currentIndex + 1}/7
+                </span>
+                {isPlaying && (
+                  <span className="flex items-center gap-1 text-[10px] text-[#6B8E23] font-semibold animate-pulse">
+                    <Radio className="w-3 h-3" /> Đang phát
+                  </span>
+                )}
+              </div>
+              <p className="text-xs sm:text-sm font-bold text-gray-800 truncate mt-0.5">
+                {currentSong.title}
+              </p>
+            </div>
+          </div>
+
+          {/* Mini Action Controls & Expand/Collapse Toggle Button ('v') */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
+            {/* Play/Pause mini button */}
+            <button
+              onClick={togglePlayPause}
+              className="p-1.5 sm:p-2 rounded-full bg-[#D4A373] hover:bg-[#b08256] text-white transition-transform active:scale-90 cursor-pointer shadow-2xs"
+              title={isPlaying ? 'Tạm dừng' : 'Phát nhạc'}
+            >
+              {isPlaying ? <Pause className="w-3.5 h-3.5 fill-white" /> : <Play className="w-3.5 h-3.5 fill-white ml-0.5" />}
+            </button>
+
+            {/* Next song mini button */}
+            <button
+              onClick={handleNextWithFade}
+              className="p-1.5 sm:p-2 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-700 transition-transform active:scale-90 cursor-pointer hidden xs:flex"
+              title="Bài tiếp theo (giảm dần âm lượng)"
+            >
+              <SkipForward className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Shuffle indicator */}
+            <button
+              onClick={() => setIsShuffle(!isShuffle)}
+              className={`p-1.5 sm:p-2 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                isShuffle ? 'bg-[#6B8E23] text-white' : 'bg-stone-100 text-stone-500 hover:bg-stone-200'
+              }`}
+              title={isShuffle ? 'Tắt xáo bài' : 'Bật xáo bài'}
+            >
+              <Shuffle className="w-3.5 h-3.5" />
+            </button>
+
+            {/* Expand / Collapse ('v' icon) */}
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-[#FEFAE0] hover:bg-[#FAEDCD] text-[#B37840] border border-[#D4A373]/40 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-2xs"
+              title={isExpanded ? 'Thu gọn' : 'Mở danh sách nhạc'}
+            >
+              <span className="hidden sm:inline">{isExpanded ? 'Thu gọn' : 'Danh sách nhạc'}</span>
+              {isExpanded ? <ChevronUp className="w-4 h-4 stroke-[2.5]" /> : <ChevronDown className="w-4 h-4 stroke-[2.5]" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Expanded Panel: Full Audio Player & Songs List */}
+        {isExpanded && (
+          <div className="border-t border-[#D4A373]/20 bg-[#FFFDF0]/80 p-3 sm:p-4 transition-all animate-fadeIn">
+            {/* Player Controls Bar */}
+            <div className="flex flex-wrap items-center justify-between gap-3 p-3 bg-[#FEFAE0] rounded-xl border border-[#D4A373]/20 mb-3">
+              {/* Left: Shuffle & Loop Info */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsShuffle(!isShuffle)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    isShuffle 
+                      ? 'bg-[#6B8E23] text-white shadow-2xs' 
+                      : 'bg-white text-stone-600 border border-stone-200 hover:bg-stone-50'
+                  }`}
+                  title="Xáo bài ngẫu nhiên"
+                >
+                  <Shuffle className="w-3.5 h-3.5" />
+                  <span>Xáo bài: {isShuffle ? 'Bật' : 'Tắt'}</span>
+                </button>
+
+                <a
+                  href={currentSong.youtubeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden md:inline-flex items-center gap-1 text-[11px] text-[#B37840] hover:underline font-medium"
+                >
+                  <span>Mở YouTube</span>
+                  <ExternalLink className="w-3 h-3" />
+                </a>
+              </div>
+
+              {/* Center: Main Playback Controls */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <button
+                  onClick={handlePrevWithFade}
+                  className="p-2 rounded-full bg-white text-stone-700 hover:bg-stone-100 border border-stone-200 transition-all active:scale-90 cursor-pointer shadow-2xs"
+                  title="Bài trước đó"
+                >
+                  <SkipBack className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={togglePlayPause}
+                  className="p-3 rounded-full bg-[#D4A373] hover:bg-[#b08256] text-white transition-all active:scale-95 cursor-pointer shadow-sm"
+                  title={isPlaying ? 'Tạm dừng' : 'Phát nhạc'}
+                >
+                  {isPlaying ? <Pause className="w-5 h-5 fill-white" /> : <Play className="w-5 h-5 fill-white ml-0.5" />}
+                </button>
+
+                <button
+                  onClick={handleNextWithFade}
+                  className="p-2 rounded-full bg-white text-stone-700 hover:bg-stone-100 border border-stone-200 transition-all active:scale-90 cursor-pointer shadow-2xs"
+                  title="Bài tiếp theo"
+                >
+                  <SkipForward className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Right: Volume Slider */}
+              <div className="flex items-center gap-2 min-w-[120px]">
+                <button
+                  onClick={toggleMute}
+                  className="text-stone-600 hover:text-stone-900 transition-colors cursor-pointer"
+                  title={isMuted ? 'Mở tiếng' : 'Tắt tiếng'}
+                >
+                  {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                </button>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={isMuted ? 0 : volume}
+                  onChange={handleVolumeChange}
+                  className="w-20 sm:w-24 h-1.5 bg-stone-200 rounded-lg appearance-none cursor-pointer accent-[#D4A373]"
+                  title="Âm lượng"
+                />
+              </div>
+            </div>
+
+            {/* Notice about smooth volume fade transition */}
+            <p className="text-[11px] text-amber-800/80 italic mb-2.5 px-1">
+              ✨ Khi đổi bài, âm lượng sẽ từ từ giảm dần rồi tự động chuyển sang bài mới.
+            </p>
+
+            {/* Playlist Table / List */}
+            <div className="space-y-1.5 max-h-64 overflow-y-auto pr-1 scrollbar-thin">
+              {SONGS.map((song, idx) => {
+                const isActive = idx === currentIndex;
+                return (
+                  <div
+                    key={song.id}
+                    onClick={() => {
+                      if (!isActive) {
+                        transitionToSong(idx);
+                      } else {
+                        togglePlayPause();
+                      }
+                    }}
+                    className={`flex items-center justify-between p-2.5 rounded-xl transition-all cursor-pointer border ${
+                      isActive
+                        ? 'bg-[#E9D8A6]/40 border-[#D4A373] text-stone-900 shadow-2xs'
+                        : 'bg-white/70 hover:bg-white border-stone-200/60 text-stone-700'
+                    }`}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className={`w-6 text-center text-xs font-bold ${isActive ? 'text-[#B37840]' : 'text-stone-400'}`}>
+                        {isActive && isPlaying ? (
+                          <div className="flex items-center justify-center gap-0.5">
+                            <span className="w-0.5 h-3 bg-[#B37840] animate-bounce" style={{ animationDelay: '0ms' }} />
+                            <span className="w-0.5 h-3 bg-[#B37840] animate-bounce" style={{ animationDelay: '150ms' }} />
+                            <span className="w-0.5 h-3 bg-[#B37840] animate-bounce" style={{ animationDelay: '300ms' }} />
+                          </div>
+                        ) : (
+                          `${idx + 1}`
+                        )}
+                      </span>
+
+                      <div className="min-w-0">
+                        <p className={`text-xs sm:text-sm font-semibold truncate ${isActive ? 'text-[#B37840] font-bold' : ''}`}>
+                          {song.title}
+                        </p>
+                        <span className="text-[10px] text-stone-500 font-mono">
+                          Khúc nhạc: {song.timeRangeLabel}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 flex-shrink-0">
+                      {isActive && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#B37840] text-white">
+                          {isPlaying ? 'Đang phát' : 'Tạm dừng'}
+                        </span>
+                      )}
+                      <div className="p-1 rounded-full text-stone-400 hover:text-stone-700">
+                        {isActive && isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current ml-0.5" />}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
